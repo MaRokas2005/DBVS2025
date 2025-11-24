@@ -1,4 +1,4 @@
-SET search_path TO pice1138;
+SET search_path TO "$user";
 
 -- ============================================
 -- 1. NARIAI

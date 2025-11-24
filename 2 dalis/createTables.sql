@@ -1,6 +1,5 @@
-
 -- Nustatyti schemą (jūsų MIF vartotojo vardas)
-SET search_path TO pice1138, public;
+SET search_path TO "$user";
 -- ============================================
 -- LENTELIŲ IŠTRYNIMAS (jei egzistuoja)
 -- ============================================
