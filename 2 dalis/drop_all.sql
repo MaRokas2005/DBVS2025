@@ -1,0 +1,53 @@
+-- ============================================
+-- VISŲ OBJEKTŲ IŠTRYNIMAS
+-- ============================================
+
+SET search_path TO "$user";
+
+
+-- Trigeriai
+DROP TRIGGER IF EXISTS trg_dalyvavimas_insert ON DALYVAVIMAS;
+DROP TRIGGER IF EXISTS trg_dalyvavimas_update ON DALYVAVIMAS;
+DROP TRIGGER IF EXISTS trg_dalyvavimas_delete ON DALYVAVIMAS;
+DROP TRIGGER IF EXISTS trg_tikrinti_sales_talpa ON DALYVAVIMAS;
+DROP TRIGGER IF EXISTS trg_uzkirst_abonementu_trynima ON ABONEMENTAS;
+DROP TRIGGER IF EXISTS trg_abonementas_statusas_insert ON ABONEMENTAS;
+DROP TRIGGER IF EXISTS trg_abonementas_statusas_update ON ABONEMENTAS;
+
+-- Funkcijos
+DROP FUNCTION IF EXISTS atnaujinti_dalyviu_skaiciu();
+DROP FUNCTION IF EXISTS tikrinti_sales_talpa();
+DROP FUNCTION IF EXISTS uzkirst_abonementu_trynima();
+DROP FUNCTION IF EXISTS atnaujinti_abonementu_statusus();
+
+-- Materializuotos VIEW
+DROP MATERIALIZED VIEW IF EXISTS mv_nariu_pajamu_analize CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS mv_treniruociu_populiarumas CASCADE;
+DROP MATERIALIZED VIEW IF EXISTS mv_menesio_finansai CASCADE;
+
+-- VIEW
+DROP VIEW IF EXISTS v_aktyvus_nariai CASCADE;
+DROP VIEW IF EXISTS v_busimos_sesijos CASCADE;
+DROP VIEW IF EXISTS v_treneriu_kruviai CASCADE;
+DROP VIEW IF EXISTS v_nariu_lankomumas CASCADE;
+DROP VIEW IF EXISTS v_pajamos_pagal_tipą CASCADE;
+DROP VIEW IF EXISTS v_saliu_uzimtumas CASCADE;
+
+-- Indeksai (automatiškai ištrinami su lentelėmis, bet galima ir rankiniu būdu)
+DROP INDEX IF EXISTS idx_treneris_el_pastas;
+DROP INDEX IF EXISTS idx_sale_pavadinimas;
+DROP INDEX IF EXISTS idx_narys_pavarde;
+DROP INDEX IF EXISTS idx_sesija_data;
+DROP INDEX IF EXISTS idx_sesija_statusas_data;
+DROP INDEX IF EXISTS idx_abonementas_statusas;
+
+-- Lentelės
+DROP TABLE IF EXISTS TRENERIS_SESIJA CASCADE;
+DROP TABLE IF EXISTS DALYVAVIMAS CASCADE;
+DROP TABLE IF EXISTS SESIJA CASCADE;
+DROP TABLE IF EXISTS MOKEJIMAS CASCADE;
+DROP TABLE IF EXISTS ABONEMENTAS CASCADE;
+DROP TABLE IF EXISTS TRENIRUOTE CASCADE;
+DROP TABLE IF EXISTS SALE CASCADE;
+DROP TABLE IF EXISTS TRENERIS CASCADE;
+DROP TABLE IF EXISTS NARYS CASCADE;

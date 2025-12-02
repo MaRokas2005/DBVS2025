@@ -98,6 +98,6 @@ SELECT
     indexname,
     indexdef
 FROM pg_indexes
-WHERE schemaname = 'pice1138'
+WHERE schemaname = '$user'
 ORDER BY tablename, indexname;
 
