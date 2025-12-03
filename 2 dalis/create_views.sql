@@ -36,7 +36,7 @@ SELECT
     (tr.maksimalus_dalyviu_skaicius - s.uzsiregistravusiu_dalyviu_skaicius) AS laisvos_vietos
 FROM SESIJA s
 JOIN TRENIRUOTE tr ON s.treniruotesid = tr.treniruotesid
-LEFT JOIN TRENERIS t ON s.trenerisid = t.trenerisid
+LEFT JOIN TRENERIS t ON s.trenerioID = t.trenerioID
 LEFT JOIN SALE sa ON s.salesid = sa.salesid
 WHERE s.data >= CURRENT_DATE AND s.statusas = 'Suplanuota'
 ORDER BY s.data, s.pradzios_laikas;
@@ -46,7 +46,7 @@ COMMENT ON VIEW v_busimos_sesijos IS
 
 CREATE OR REPLACE VIEW v_treneriu_kruviai AS
 SELECT 
-    t.trenerisid,
+    t.trenerioID,
     t.vardas,
     t.pavarde,
     t.specializacija,
@@ -54,13 +54,13 @@ SELECT
     COUNT(DISTINCT d.narioid) AS apmokytu_nariu_skaicius,
     ROUND(AVG(d.ivertinimas), 2) AS vidutinis_ivertinimas
 FROM TRENERIS t
-LEFT JOIN TRENERIS_SESIJA ts ON t.trenerisid = ts.trenerisid
+LEFT JOIN TRENERIS_SESIJA ts ON t.trenerioID = ts.trenerioID
 LEFT JOIN SESIJA s ON ts.treniruotesid = s.treniruotesid 
     AND ts.sesijos_nr = s.sesijos_nr
 LEFT JOIN DALYVAVIMAS d ON s.treniruotesid = d.treniruotesid 
     AND s.sesijos_nr = d.sesijos_nr
     AND d.statusas = 'Dalyvavo'
-GROUP BY t.trenerisid, t.vardas, t.pavarde, t.specializacija
+GROUP BY t.trenerioID, t.vardas, t.pavarde, t.specializacija
 ORDER BY sesiju_skaicius DESC;
 
 COMMENT ON VIEW v_treneriu_kruviai IS 
@@ -133,19 +133,3 @@ SELECT
 FROM pg_views
 WHERE schemaname = '$user'
 ORDER BY viewname;
-
-\echo ''
-\echo 'Pavyzdiniai duomenys iš VIEW:'
-\echo ''
-\echo '--- Aktyvūs nariai (pirmi 5) ---'
-SELECT * FROM v_aktyvus_nariai LIMIT 5;
-
-\echo ''
-\echo '--- Būsimos sesijos (pirmos 5) ---'
-SELECT * FROM v_busimos_sesijos LIMIT 5;
-
-\echo ''
-\echo '--- Trenerių krūviai ---'
-SELECT * FROM v_treneriu_kruviai;
-
-\echo '================================================'

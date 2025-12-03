@@ -118,6 +118,5 @@ INSERT INTO TRENERIS_SESIJA (trenerioID, treniruotesID, sesijos_nr) VALUES
 (4, 4, 2),
 (5, 5, 1),
 (5, 5, 2),
-
 (1, 3, 1),  
 (4, 2, 1);

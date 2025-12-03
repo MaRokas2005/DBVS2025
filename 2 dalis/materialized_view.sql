@@ -1,7 +1,5 @@
 SET search_path TO "$user";
 
-DROP MATERIALIZED VIEW IF EXISTS mv_nariu_pajamu_analize CASCADE;
-
 CREATE MATERIALIZED VIEW mv_nariu_pajamu_analize AS
 SELECT 
     n.narioid,
@@ -28,8 +26,6 @@ COMMENT ON MATERIALIZED VIEW mv_nariu_pajamu_analize IS
 
 CREATE INDEX idx_mv_pajamos_narioid ON mv_nariu_pajamu_analize(narioid);
 CREATE INDEX idx_mv_pajamos_suma ON mv_nariu_pajamu_analize(bendra_suma DESC);
-
-DROP MATERIALIZED VIEW IF EXISTS mv_treniruociu_populiarumas CASCADE;
 
 CREATE MATERIALIZED VIEW mv_treniruociu_populiarumas AS
 SELECT 
@@ -62,8 +58,6 @@ COMMENT ON MATERIALIZED VIEW mv_treniruociu_populiarumas IS
 CREATE INDEX idx_mv_populiarumas_treniruoteid ON mv_treniruociu_populiarumas(treniruotesid);
 CREATE INDEX idx_mv_populiarumas_ivertinimas ON mv_treniruociu_populiarumas(vidutinis_ivertinimas DESC);
 
-DROP MATERIALIZED VIEW IF EXISTS mv_menesio_finansai CASCADE;
-
 CREATE MATERIALIZED VIEW mv_menesio_finansai AS
 SELECT 
     TO_CHAR(m.data, 'YYYY-MM') AS metai_menuo,
@@ -92,4 +86,3 @@ CREATE INDEX idx_mv_finansai_metai_menuo ON mv_menesio_finansai(metai, menuo);
 REFRESH MATERIALIZED VIEW mv_nariu_pajamu_analize;
 REFRESH MATERIALIZED VIEW mv_treniruociu_populiarumas;
 REFRESH MATERIALIZED VIEW mv_menesio_finansai;
-

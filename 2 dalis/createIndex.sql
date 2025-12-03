@@ -56,4 +56,3 @@ SELECT
 FROM pg_indexes
 WHERE schemaname = '$user'
 ORDER BY tablename, indexname;
-

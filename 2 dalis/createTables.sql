@@ -1,33 +1,11 @@
 -- Nustatyti schemą (jūsų MIF vartotojo vardas)
 SET search_path TO "$user";
--- ============================================
--- LENTELIŲ IŠTRYNIMAS (jei egzistuoja)
--- ============================================
 
-DROP TABLE IF EXISTS TRENERIS_SESIJA CASCADE;
-DROP TABLE IF EXISTS DALYVAVIMAS CASCADE;
-DROP TABLE IF EXISTS SESIJA CASCADE;
-DROP TABLE IF EXISTS MOKEJIMAS CASCADE;
-DROP TABLE IF EXISTS ABONEMENTAS CASCADE;
-DROP TABLE IF EXISTS TRENIRUOTE CASCADE;
-DROP TABLE IF EXISTS SALE CASCADE;
-DROP TABLE IF EXISTS TRENERIS CASCADE;
-DROP TABLE IF EXISTS NARYS CASCADE;
-
--- ============================================
--- LENTELIŲ KŪRIMAS
--- ============================================
-
--- --------------------------------------------
--- 1. NARYS
--- --------------------------------------------
 CREATE TABLE NARYS (
     narioID SERIAL PRIMARY KEY, 
-    
-    
+
     vardas VARCHAR(50) NOT NULL,
     pavarde VARCHAR(50) NOT NULL,
-    
     
     telefonas VARCHAR(20),
     
@@ -44,7 +22,6 @@ CREATE TABLE NARYS (
     lytis VARCHAR(10) CHECK (lytis IN ('Vyras', 'Moteris', 'Kita')), 
     
     sveikatos_pastabos TEXT,
-    
     
     CONSTRAINT amziaus_check CHECK (
         EXTRACT(YEAR FROM AGE(CURRENT_DATE, gimimo_data)) >= 14
@@ -173,4 +150,3 @@ CREATE TABLE TRENERIS_SESIJA (
     FOREIGN KEY (treniruotesID, sesijos_nr) 
         REFERENCES SESIJA(treniruotesID, sesijos_nr) ON DELETE CASCADE
 );
-
