@@ -1,22 +1,4 @@
--- ============================================
--- MATERIALIZUOTOS VIRTUALIOSIOS LENTELĖS
--- Laboratorinis darbas (atliekamas poroje)
--- Autoriai: [Jūsų vardai]
--- Data: 2025-01-24
--- ============================================
-
 SET search_path TO "$user";
-
--- ============================================
--- MATERIALIZED VIEW KŪRIMAS
--- Poroje reikia bent 2 materializuotos VIEW
--- ============================================
-
--- --------------------------------------------
--- 1. Narių pajamų analizė (materializuota)
--- --------------------------------------------
--- Ši statistika skaičiuojama retai, bet naudojama dažnai,
--- todėl verta materializuoti
 
 DROP MATERIALIZED VIEW IF EXISTS mv_nariu_pajamu_analize CASCADE;
 
@@ -44,13 +26,9 @@ ORDER BY bendra_suma DESC;
 COMMENT ON MATERIALIZED VIEW mv_nariu_pajamu_analize IS 
 'Materializuota statistika apie narių mokėjimus ir pajamas - reikia atnaujinti periodiškai su REFRESH';
 
--- Sukurti indeksą materializuotai VIEW
 CREATE INDEX idx_mv_pajamos_narioid ON mv_nariu_pajamu_analize(narioid);
 CREATE INDEX idx_mv_pajamos_suma ON mv_nariu_pajamu_analize(bendra_suma DESC);
 
--- --------------------------------------------
--- 2. Treniruočių populiarumo reitingai (materializuota)
--- --------------------------------------------
 DROP MATERIALIZED VIEW IF EXISTS mv_treniruociu_populiarumas CASCADE;
 
 CREATE MATERIALIZED VIEW mv_treniruociu_populiarumas AS
@@ -81,13 +59,9 @@ ORDER BY vidutinis_ivertinimas DESC NULLS LAST, unikaliu_dalyviu_skaicius DESC;
 COMMENT ON MATERIALIZED VIEW mv_treniruociu_populiarumas IS 
 'Materializuota statistika apie treniruočių populiarumą pagal dalyvius, įvertinimus ir lankymą';
 
--- Sukurti indeksus materializuotai VIEW
 CREATE INDEX idx_mv_populiarumas_treniruoteid ON mv_treniruociu_populiarumas(treniruotesid);
 CREATE INDEX idx_mv_populiarumas_ivertinimas ON mv_treniruociu_populiarumas(vidutinis_ivertinimas DESC);
 
--- --------------------------------------------
--- 3. Mėnesio finansinė suvestinė (materializuota)
--- --------------------------------------------
 DROP MATERIALIZED VIEW IF EXISTS mv_menesio_finansai CASCADE;
 
 CREATE MATERIALIZED VIEW mv_menesio_finansai AS
@@ -115,34 +89,7 @@ COMMENT ON MATERIALIZED VIEW mv_menesio_finansai IS
 
 CREATE INDEX idx_mv_finansai_metai_menuo ON mv_menesio_finansai(metai, menuo);
 
--- ============================================
--- REFRESH SAKINIAI
--- ============================================
-
-\echo '================================================'
-\echo 'Materializuotos VIEW sukurtos!'
-\echo 'Dabar atnaujinami duomenys...'
-\echo '================================================'
-
--- Atnaujinti visas materializuotas VIEW
 REFRESH MATERIALIZED VIEW mv_nariu_pajamu_analize;
 REFRESH MATERIALIZED VIEW mv_treniruociu_populiarumas;
 REFRESH MATERIALIZED VIEW mv_menesio_finansai;
 
-\echo 'Visi duomenys atnaujinti!'
-\echo ''
-
--- ============================================
--- TESTAVIMAS
--- ============================================
-
-\echo '--- Narių pajamų analizė ---'
-SELECT * FROM mv_nariu_pajamu_analize LIMIT 5;
-
-\echo ''
-\echo '--- Treniruočių populiarumas ---'
-SELECT * FROM mv_treniruociu_populiarumas LIMIT 5;
-
-\echo ''
-\echo '--- Mėnesio finansai ---'
-SELECT * FROM mv_menesio_finansai;

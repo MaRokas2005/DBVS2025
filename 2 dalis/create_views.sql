@@ -1,20 +1,5 @@
--- ============================================
--- VIRTUALIOSIOS LENTELĖS (VIEW)
--- Laboratorinis darbas (atliekamas poroje)
--- Autoriai: [Jūsų vardai]
--- Data: 2025-01-24
--- ============================================
-
 SET search_path TO "$user";
 
--- ============================================
--- VIEW KŪRIMAS
--- Poroje reikia bent 4 VIEW
--- ============================================
-
--- --------------------------------------------
--- 1. Aktyvių narių su abonementais peržiūra
--- --------------------------------------------
 CREATE OR REPLACE VIEW v_aktyvus_nariai AS
 SELECT 
     n.narioid,
@@ -35,9 +20,6 @@ ORDER BY n.pavarde, n.vardas;
 COMMENT ON VIEW v_aktyvus_nariai IS 
 'Rodo visus narius su aktyviais abonementais';
 
--- --------------------------------------------
--- 2. Būsimų sesijų tvarkaraštis
--- --------------------------------------------
 CREATE OR REPLACE VIEW v_busimos_sesijos AS
 SELECT 
     s.treniruotesid,
@@ -62,9 +44,6 @@ ORDER BY s.data, s.pradzios_laikas;
 COMMENT ON VIEW v_busimos_sesijos IS 
 'Rodo visas būsimas suplanuotas treniruočių sesijas su informacija apie trenerius, sales ir laisvas vietas';
 
--- --------------------------------------------
--- 3. Trenerių darbo krūvis
--- --------------------------------------------
 CREATE OR REPLACE VIEW v_treneriu_kruviai AS
 SELECT 
     t.trenerisid,
@@ -87,9 +66,6 @@ ORDER BY sesiju_skaicius DESC;
 COMMENT ON VIEW v_treneriu_kruviai IS 
 'Rodo kiekvieno trenerio darbo krūvį: sesijų skaičių, apmokytų narių skaičių ir vidutinius įvertinimus';
 
--- --------------------------------------------
--- 4. Narių lankomumo statistika
--- --------------------------------------------
 CREATE OR REPLACE VIEW v_nariu_lankomumas AS
 SELECT 
     n.narioid,
@@ -114,9 +90,6 @@ ORDER BY lankomumo_procentas DESC NULLS LAST;
 COMMENT ON VIEW v_nariu_lankomumas IS 
 'Rodo kiekvieno nario lankymosi statistiką: registracijų skaičių, dalyvavimų skaičių, procentą ir vidutinius įvertinimus';
 
--- --------------------------------------------
--- 5. Pajamų suvestinė pagal abonementų tipus
--- --------------------------------------------
 CREATE OR REPLACE VIEW v_pajamos_pagal_tipą AS
 SELECT 
     a.tipas AS abonamento_tipas,
@@ -134,9 +107,6 @@ ORDER BY bendros_pajamos DESC;
 COMMENT ON VIEW v_pajamos_pagal_tipą IS 
 'Rodo pajamų statistiką pagal abonementų tipus';
 
--- --------------------------------------------
--- 6. Salių užimtumas
--- --------------------------------------------
 CREATE OR REPLACE VIEW v_saliu_uzimtumas AS
 SELECT 
     sa.salesid,
@@ -157,15 +127,6 @@ ORDER BY vidutinis_uzimtumas_procentais DESC NULLS LAST;
 COMMENT ON VIEW v_saliu_uzimtumas IS 
 'Rodo salių užimtumo statistiką: sesijų skaičių ir vidutinius užimtumo procentus';
 
--- ============================================
--- VIEW TESTAVIMAS
--- ============================================
-
-\echo '================================================'
-\echo 'Virtualiosios lentelės (VIEW) sukurtos sėkmingai!'
-\echo '================================================'
-
--- Parodyti visas VIEW
 SELECT 
     schemaname,
     viewname

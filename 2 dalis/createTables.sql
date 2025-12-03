@@ -22,41 +22,37 @@ DROP TABLE IF EXISTS NARYS CASCADE;
 -- 1. NARYS
 -- --------------------------------------------
 CREATE TABLE NARYS (
-    narioID SERIAL PRIMARY KEY,  -- Automatinis tapatumo požymis (1)
+    narioID SERIAL PRIMARY KEY, 
     
-    -- SUDĖTINIS ATRIBUTAS: Pilnas_vardas
+    
     vardas VARCHAR(50) NOT NULL,
     pavarde VARCHAR(50) NOT NULL,
     
-    -- Paprastas atributas
+    
     telefonas VARCHAR(20),
     
-    el_pastas VARCHAR(100) UNIQUE,  -- UNIQUE constraint
+    el_pastas VARCHAR(100) UNIQUE,  
     
-    gimimo_data DATE CHECK (gimimo_data <= CURRENT_DATE),  -- CHECK (1)
+    gimimo_data DATE CHECK (gimimo_data <= CURRENT_DATE),  
     
-    registracijos_data DATE DEFAULT CURRENT_DATE,  -- DEFAULT (1)
+    registracijos_data DATE DEFAULT CURRENT_DATE,  
     
-    -- SUDĖTINIS ATRIBUTAS: Adresas
     gatve VARCHAR(100),
-    miestas VARCHAR(50) DEFAULT 'Vilnius',  -- DEFAULT (2)
+    miestas VARCHAR(50) DEFAULT 'Vilnius',
     namo_nr VARCHAR(10),
     
-    lytis VARCHAR(10) CHECK (lytis IN ('Vyras', 'Moteris', 'Kita')),  -- CHECK (2)
+    lytis VARCHAR(10) CHECK (lytis IN ('Vyras', 'Moteris', 'Kita')), 
     
     sveikatos_pastabos TEXT,
     
-    -- Dalykinė taisyklė: narys turi būti bent 14 metų
+    
     CONSTRAINT amziaus_check CHECK (
         EXTRACT(YEAR FROM AGE(CURRENT_DATE, gimimo_data)) >= 14
-    )  -- CHECK (3)
+    ) 
 );
 
--- --------------------------------------------
--- 2. TRENERIS
--- --------------------------------------------
 CREATE TABLE TRENERIS (
-    trenerioID SERIAL PRIMARY KEY,  -- Automatinis tapatumo požymis (2)
+    trenerioID SERIAL PRIMARY KEY, 
     
     vardas VARCHAR(50) NOT NULL,
     pavarde VARCHAR(50) NOT NULL,
@@ -64,87 +60,70 @@ CREATE TABLE TRENERIS (
     specializacija VARCHAR(100) NOT NULL,
     
     telefonas VARCHAR(20),
-    el_pastas VARCHAR(100) UNIQUE,  -- UNIQUE constraint
+    el_pastas VARCHAR(100) UNIQUE, 
     
     darbo_pradzia DATE NOT NULL,
     
-    -- Treneris dirba nuo 2020 metų arba vėliau
-    CONSTRAINT darbo_data_check CHECK (darbo_pradzia >= '2020-01-01')  -- CHECK (4)
+    CONSTRAINT darbo_data_check CHECK (darbo_pradzia >= '2020-01-01')  
 );
 
--- --------------------------------------------
--- 3. SALE
--- --------------------------------------------
 CREATE TABLE SALE (
-    salesID SERIAL PRIMARY KEY,  -- Automatinis tapatumo požymis (3)
+    salesID SERIAL PRIMARY KEY, 
     
-    pavadinimas VARCHAR(50) NOT NULL UNIQUE,  -- UNIQUE constraint
+    pavadinimas VARCHAR(50) NOT NULL UNIQUE, 
     
-    plotas_kv_m DECIMAL(6,2) CHECK (plotas_kv_m > 0),  -- CHECK (5)
+    plotas_kv_m DECIMAL(6,2) CHECK (plotas_kv_m > 0),
     
-    maksimali_talpa INTEGER CHECK (maksimali_talpa > 0 AND maksimali_talpa <= 100),  -- CHECK (6)
+    maksimali_talpa INTEGER CHECK (maksimali_talpa > 0 AND maksimali_talpa <= 100), 
     
-    sales_tipas TEXT DEFAULT 'Bendra'  -- DEFAULT (3)
+    sales_tipas TEXT DEFAULT 'Bendra' 
 );
 
--- --------------------------------------------
--- 4. TRENIRUOTE
--- --------------------------------------------
 CREATE TABLE TRENIRUOTE (
-    treniruotesID SERIAL PRIMARY KEY,  -- Automatinis tapatumo požymis (4)
+    treniruotesID SERIAL PRIMARY KEY,
     
     pavadinimas VARCHAR(100) NOT NULL,
     
-    tipas VARCHAR(20) CHECK (tipas IN ('Grupinė', 'Individuali', 'Hibridinė')),  -- CHECK (7)
+    tipas VARCHAR(20) CHECK (tipas IN ('Grupinė', 'Individuali', 'Hibridinė')),
     
-    trukme_minutemis INTEGER CHECK (trukme_minutemis BETWEEN 15 AND 180),  -- CHECK (8)
+    trukme_minutemis INTEGER CHECK (trukme_minutemis BETWEEN 15 AND 180),
     
-    maksimalus_dalyviu_skaicius INTEGER DEFAULT 20,  -- DEFAULT (4)
+    maksimalus_dalyviu_skaicius INTEGER DEFAULT 20,
     
     sudetingumo_lygis VARCHAR(20)
 );
 
--- --------------------------------------------
--- 5. ABONEMENTAS
--- --------------------------------------------
 CREATE TABLE ABONEMENTAS (
-    abonementoID SERIAL PRIMARY KEY,  -- Automatinis tapatumo požymis (5)
+    abonementoID SERIAL PRIMARY KEY, 
     
     narioID INTEGER NOT NULL REFERENCES NARYS(narioID) ON DELETE CASCADE,
     
     tipas VARCHAR(20) NOT NULL,
     
-    kaina DECIMAL(8,2) NOT NULL CHECK (kaina >= 0),  -- CHECK (9)
+    kaina DECIMAL(8,2) NOT NULL CHECK (kaina >= 0), 
     
     pradzios_data DATE NOT NULL,
     pabaigos_data DATE,
     
-    statusas VARCHAR(20) DEFAULT 'Aktyvus',  -- DEFAULT (5)
-    
-    -- Abonementas baigiasi po pradžios
-    CONSTRAINT datos_check CHECK (pabaigos_data IS NULL OR pabaigos_data > pradzios_data)  -- CHECK (10)
+    statusas VARCHAR(20) DEFAULT 'Aktyvus', 
+
+    CONSTRAINT datos_check CHECK (pabaigos_data IS NULL OR pabaigos_data > pradzios_data) 
 );
 
--- --------------------------------------------
--- 6. MOKEJIMAS
--- --------------------------------------------
 CREATE TABLE MOKEJIMAS (
-    mokejimoID SERIAL PRIMARY KEY,  -- Automatinis tapatumo požymis (6)
+    mokejimoID SERIAL PRIMARY KEY, 
     
     abonementoID INTEGER NOT NULL REFERENCES ABONEMENTAS(abonementoID) ON DELETE CASCADE,
     
-    data DATE DEFAULT CURRENT_DATE,  -- DEFAULT (6)
+    data DATE DEFAULT CURRENT_DATE,
     
-    kaina INTEGER NOT NULL CHECK (kaina > 0),  -- CHECK (11)
+    kaina INTEGER NOT NULL CHECK (kaina > 0), 
     
-    budas VARCHAR(20) DEFAULT 'Kortelė',  -- DEFAULT (7)
+    budas VARCHAR(20) DEFAULT 'Kortelė',
     
-    statusas VARCHAR(20) DEFAULT 'Apmokėta'  -- DEFAULT (8)
+    statusas VARCHAR(20) DEFAULT 'Apmokėta' 
 );
 
--- --------------------------------------------
--- 7. SESIJA
--- --------------------------------------------
 CREATE TABLE SESIJA (
     treniruotesID INTEGER NOT NULL REFERENCES TRENIRUOTE(treniruotesID) ON DELETE CASCADE,
     sesijos_nr INTEGER NOT NULL,
@@ -156,29 +135,25 @@ CREATE TABLE SESIJA (
     trenerioID INTEGER REFERENCES TRENERIS(trenerioID) ON DELETE SET NULL,
     salesID INTEGER REFERENCES SALE(salesID) ON DELETE SET NULL,
     
-    uzsiregistravusiu_dalyviu_skaicius INTEGER DEFAULT 0,  -- DEFAULT (9)
+    uzsiregistravusiu_dalyviu_skaicius INTEGER DEFAULT 0,  
     
-    statusas VARCHAR(20) DEFAULT 'Suplanuota',  -- DEFAULT (10)
+    statusas VARCHAR(20) DEFAULT 'Suplanuota',
     
     PRIMARY KEY (treniruotesID, sesijos_nr),
     
-    -- Sesija baigiasi po pradžios
-    CONSTRAINT laiko_check CHECK (pabaigos_laikas > pradzios_laikas)  -- CHECK (12)
+    CONSTRAINT laiko_check CHECK (pabaigos_laikas > pradzios_laikas)
 );
 
--- --------------------------------------------
--- 8. DALYVAVIMAS
--- --------------------------------------------
 CREATE TABLE DALYVAVIMAS (
     narioID INTEGER NOT NULL REFERENCES NARYS(narioID) ON DELETE CASCADE,
     treniruotesID INTEGER NOT NULL,
     sesijos_nr INTEGER NOT NULL,
     
-    registracijos_data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- DEFAULT (11)
+    registracijos_data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  
     
-    statusas VARCHAR(20) DEFAULT 'Užsiregistravo',  -- DEFAULT (12)
+    statusas VARCHAR(20) DEFAULT 'Užsiregistravo', 
     
-    ivertinimas INTEGER CHECK (ivertinimas IS NULL OR (ivertinimas BETWEEN 1 AND 5)),  -- CHECK (13)
+    ivertinimas INTEGER CHECK (ivertinimas IS NULL OR (ivertinimas BETWEEN 1 AND 5)), 
     
     pastabos TEXT,
     
@@ -188,9 +163,6 @@ CREATE TABLE DALYVAVIMAS (
         REFERENCES SESIJA(treniruotesID, sesijos_nr) ON DELETE CASCADE
 );
 
--- --------------------------------------------
--- 9. TRENERIS_SESIJA (N:M ryšys)
--- --------------------------------------------
 CREATE TABLE TRENERIS_SESIJA (
     trenerioID INTEGER NOT NULL REFERENCES TRENERIS(trenerioID) ON DELETE CASCADE,
     treniruotesID INTEGER NOT NULL,
